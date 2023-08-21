@@ -1,6 +1,10 @@
 package practice;
 
 import java.awt.*;
+import java.awt.event.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import javax.swing.*;
 
 public class MyFrame extends JFrame {
@@ -10,8 +14,9 @@ public class MyFrame extends JFrame {
 
     JPanel panel1, panel2;
     JTextField tf;
-    String buttonStr[] = {"%", "/", "DEL", "AC", "7", "8", "9", "*", "4", "5", "6", "-", "1", "2", "3", "+", "+/-", "0", ".", "="};
+    String buttonStr[] = {" % ", " / ", "DEL", "AC", "7", "8", "9", " * ", "4", "5", "6", " - ", "1", "2", "3", " + ", "", "0", ".", "="};
     JButton buttonList[] = new JButton[buttonStr.length];
+
     public MyFrame() {
         setSize(400, 600);              //창 크기 설정
         setTitle("Java Calculator");
@@ -33,9 +38,10 @@ public class MyFrame extends JFrame {
         panel1.add(tf);
         
         //하단 버튼 추가
-        panel2 = new JPanel(new GridLayout(5, 4));
+        panel2 = new JPanel(new GridLayout(5, 4, 10, 10));
         for(int i = 0; i < buttonStr.length; i++) {
             buttonList[i] = new JButton(buttonStr[i]);
+            buttonList[i].addActionListener(new BtnActionListener());
             panel2.add(buttonList[i]);
         }
 
@@ -47,6 +53,57 @@ public class MyFrame extends JFrame {
         gbc.weightx=1.0;
         gbc.weighty=1.0;
         setPanelLayout(panel2, 0, 1, 1, 1);
+
+    }
+
+    class BtnActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String op = e.getActionCommand();
+            if(op.equals("AC")) {
+                tf.setText("");
+            } else if(op.equals("DEL")) {
+                String str = tf.getText();
+                if(!str.isEmpty()) 
+                    tf.setText(str.substring(0, str.length() - 1));
+            } else if(op.equals("=")) {
+                tf.setText(getResult(tf.getText()));
+            } else {
+                tf.setText(tf.getText() + e.getActionCommand());
+            }
+        }
+    }
+
+    String getResult(String str) {
+        String[] strArr = str.split(" ");
+        String result;
+        try {
+            BigDecimal sum = new BigDecimal(strArr[0]);
+            for(int i = 1; i < strArr.length; i+=2) {
+                if(i % 2 == 1) {
+                    System.out.println(strArr[i]);
+                    if(strArr[i].equals("+"))
+                        sum = sum.add(new BigDecimal(strArr[i+1]));
+                    else if(strArr[i].equals("-"))
+                        sum = sum.subtract(new BigDecimal(strArr[i+1]));
+                    else if(strArr[i].equals("*"))
+                        sum = sum.multiply(new BigDecimal(strArr[i+1]));
+                    else if(strArr[i].equals("/"))
+                        sum = sum.divide(new BigDecimal(strArr[i+1]), 4, RoundingMode.HALF_UP);
+                    else if(strArr[i].equals("%"))
+                        sum = sum.remainder(new BigDecimal(strArr[i+1]));
+                    else
+                        throw new Exception("Error");
+                    
+                } else {
+                    throw new Exception("Error");
+                }
+            }
+            result = sum.toString();
+        } catch (Exception e) {
+            result = "올바른 공식을 적어주세요.";
+        }
+        return result;
     }
 
     void setPanelLayout(Component obj, int x, int y, int w, int h) {
