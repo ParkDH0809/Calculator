@@ -22,11 +22,9 @@ public class MyFrame extends JFrame {
         setTitle("Java Calculator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);     //X버튼 클릭 시 종료 방법 설정
         setLocationRelativeTo(null);               //창 표시 위치 설정
-        
         setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
-        
         setPanel();
         setVisible(true);                          //창 표시 유무 설정
     }
@@ -35,6 +33,7 @@ public class MyFrame extends JFrame {
         //상단 TextField 추가
         panel1 = new JPanel(new GridLayout(1, 0));
         tf = new JTextField(30);
+        tf.setFont(new Font("Sans-serif", Font.BOLD, 50));
         panel1.add(tf);
         
         //하단 버튼 추가
