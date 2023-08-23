@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Stack;
 
 import javax.swing.*;
 
@@ -33,14 +34,17 @@ public class MyFrame extends JFrame {
         //상단 TextField 추가
         panel1 = new JPanel(new GridLayout(1, 0));
         tf = new JTextField(30);
+        tf.setEditable(false);               //TextField 사용 방지 (setEnabled()와 다름)
         tf.setFont(new Font("Sans-serif", Font.BOLD, 50));
         panel1.add(tf);
         
         //하단 버튼 추가
         panel2 = new JPanel(new GridLayout(5, 4, 10, 10));
+        
         for(int i = 0; i < buttonStr.length; i++) {
             buttonList[i] = new JButton(buttonStr[i]);
             buttonList[i].addActionListener(new BtnActionListener());
+            buttonList[i].setFont(new Font("Sans-serif", Font.PLAIN, 15));
             if(i == 2 || i == 3)
                 buttonList[i].setBackground(new Color(255,111,105));
             else if(i == 19)
@@ -83,12 +87,13 @@ public class MyFrame extends JFrame {
 
     String getResult(String str) {
         String[] strArr = str.split(" ");
+        Stack<String> stack = new Stack<>();
+
         String result;
         try {
             BigDecimal sum = new BigDecimal(strArr[0]);
             for(int i = 1; i < strArr.length; i+=2) {
                 if(i % 2 == 1) {
-                    System.out.println(strArr[i]);
                     if(strArr[i].equals("+"))
                         sum = sum.add(new BigDecimal(strArr[i+1]));
                     else if(strArr[i].equals("-"))
