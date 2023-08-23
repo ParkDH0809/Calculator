@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 import javax.swing.*;
@@ -86,35 +88,83 @@ public class MyFrame extends JFrame {
     }
 
     String getResult(String str) {
-        String[] strArr = str.split(" ");
-        Stack<String> stack = new Stack<>();
-
         String result;
         try {
-            BigDecimal sum = new BigDecimal(strArr[0]);
-            for(int i = 1; i < strArr.length; i+=2) {
-                if(i % 2 == 1) {
-                    if(strArr[i].equals("+"))
-                        sum = sum.add(new BigDecimal(strArr[i+1]));
-                    else if(strArr[i].equals("-"))
-                        sum = sum.subtract(new BigDecimal(strArr[i+1]));
-                    else if(strArr[i].equals("*"))
-                        sum = sum.multiply(new BigDecimal(strArr[i+1]));
-                    else if(strArr[i].equals("/"))
-                        sum = sum.divide(new BigDecimal(strArr[i+1]), 4, RoundingMode.HALF_UP);
-                    else if(strArr[i].equals("%"))
-                        sum = sum.remainder(new BigDecimal(strArr[i+1]));
-                    else
-                        throw new Exception("Error");
-                    
+            String[] strArr = str.split(" ");
+
+            //1. 중위를 후위로 변경
+            HashMap<String, Integer> pri = new HashMap<>();
+            pri.put("+", 0);
+            pri.put("-", 0);
+            pri.put("*", 1);
+            pri.put("/", 1);
+            pri.put("%", 1);
+
+            Stack<String> stack = new Stack<>();
+            ArrayList<String> reverseStrArr = new ArrayList<>();
+            for(String s : strArr) {
+                if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%")) {
+                    if(stack.isEmpty())
+                        stack.push(s);
+                    else { 
+                        System.out.println("Test: " + pri.get(stack.peek()) + " " + stack.peek());
+                        if(pri.get(stack.peek()) < pri.get(s)) 
+                            stack.push(s);
+                        else {
+                            while(true) {
+                                if(stack.isEmpty() || pri.get(stack.peek()) < pri.get(s)) {
+                                    stack.push(s);
+                                    break;
+                                }
+                                reverseStrArr.add(stack.pop());
+                            }
+                        }
+                    }
                 } else {
-                    throw new Exception("Error");
+                    reverseStrArr.add(s);
+                }
+
+            }
+            while(!stack.isEmpty()) {
+                reverseStrArr.add(stack.pop());
+            }
+            
+            for(String s : reverseStrArr) {
+                System.out.print(s + " ");
+            }
+            
+            //2. 후위 표기식 계산
+            for(String s : reverseStrArr) {
+                System.out.println(s);
+                if(!(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%")))
+                    stack.add(s);
+                else {
+                    BigDecimal num2 = new BigDecimal(stack.pop());
+                    BigDecimal num1 = new BigDecimal(stack.pop());
+                    switch(s) {
+                        case "+":
+                            stack.push(num1.add(num2).toString());
+                            break;
+                        case "-":
+                            stack.push(num1.subtract(num2).toString());
+                            break;
+                        case "*":
+                            stack.push(num1.multiply(num2).toString());
+                            break;
+                        case "/":
+                            stack.push(num1.divide(num2, 4, RoundingMode.HALF_UP).toString());
+                            break;
+                        default:
+                            stack.push(num1.remainder(num2).toString());
+                            break;
+                    }
                 }
             }
-            result = sum.toString();
-        } catch (Exception e) {
-            result = "올바른 공식을 적어주세요.";
+            result = stack.pop();
+        } catch(Exception e) {
+            result = "재작성 요망";
         }
+
         return result;
     }
 
