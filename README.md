@@ -1,5 +1,7 @@
 # Calculator
 
+Swing을 사용해보는 것을 주 목적으로 만들었습니다.
+
 연산자 우선순위를 따릅니다.
 
 ![image](https://github.com/ParkDH0809/Calculator/assets/99964675/1e915eea-65a9-4ad9-821a-23a72bc2068e)
