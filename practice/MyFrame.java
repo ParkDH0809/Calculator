@@ -12,7 +12,6 @@ import javax.swing.*;
 
 public class MyFrame extends JFrame {
     
-    Container c;
     GridBagConstraints gbc;
 
     JPanel panel1, panel2;
@@ -20,14 +19,17 @@ public class MyFrame extends JFrame {
     String buttonStr[] = {" % ", " / ", "DEL", "AC", "7", "8", "9", " * ", "4", "5", "6", " - ", "1", "2", "3", " + ", "", "0", ".", "="};
     JButton buttonList[] = new JButton[buttonStr.length];
 
-    public MyFrame() {
+    public void run() {
         setSize(400, 600);              //창 크기 설정
         setTitle("Java Calculator");
         setDefaultCloseOperation(EXIT_ON_CLOSE);     //X버튼 클릭 시 종료 방법 설정
         setLocationRelativeTo(null);               //창 표시 위치 설정
+
         setLayout(new GridBagLayout());
+
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
+
         setPanel();
         setVisible(true);                          //창 표시 유무 설정
     }
@@ -47,14 +49,19 @@ public class MyFrame extends JFrame {
             buttonList[i] = new JButton(buttonStr[i]);
             buttonList[i].addActionListener(new BtnActionListener());
             buttonList[i].setFont(new Font("Sans-serif", Font.PLAIN, 15));
-            if(i == 2 || i == 3)
+
+            if(i == 2 || i == 3) {
                 buttonList[i].setBackground(new Color(255,111,105));
-            else if(i == 19)
+            }
+            else if(i == 19) {
                 buttonList[i].setBackground(new Color(255,204,92));
-            else if(0 <= i && i <= 3 || i % 4 == 3)
+            }
+            else if(0 <= i && i <= 3 || i % 4 == 3) {
                 buttonList[i].setBackground(new Color(150,206,180));
+            }
             else 
                 buttonList[i].setBackground(new Color(255,238,173));
+
             panel2.add(buttonList[i]);
         }
 
@@ -93,48 +100,62 @@ public class MyFrame extends JFrame {
             String[] strArr = str.split(" ");
 
             //1. 중위를 후위로 변경
-            HashMap<String, Integer> pri = new HashMap<>();
-            pri.put("+", 0);
-            pri.put("-", 0);
-            pri.put("*", 1);
-            pri.put("/", 1);
-            pri.put("%", 1);
-
-            Stack<String> stack = new Stack<>();
-            ArrayList<String> reverseStrArr = new ArrayList<>();
-            for(String s : strArr) {
-                if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%")) {
-                    if(stack.isEmpty())
-                        stack.push(s);
-                    else { 
-                        System.out.println("Test: " + pri.get(stack.peek()) + " " + stack.peek());
-                        if(pri.get(stack.peek()) < pri.get(s)) 
-                            stack.push(s);
-                        else {
-                            while(true) {
-                                if(stack.isEmpty() || pri.get(stack.peek()) < pri.get(s)) {
-                                    stack.push(s);
-                                    break;
-                                }
-                                reverseStrArr.add(stack.pop());
-                            }
-                        }
-                    }
-                } else {
-                    reverseStrArr.add(s);
-                }
-
-            }
-            while(!stack.isEmpty()) {
-                reverseStrArr.add(stack.pop());
-            }
-            
-            for(String s : reverseStrArr) {
-                System.out.print(s + " ");
-            }
+            ArrayList<String> postFix = changeInFixToPostFix(strArr);
             
             //2. 후위 표기식 계산
-            for(String s : reverseStrArr) {
+            result = calculatePostFix(postFix);
+            
+        } catch(Exception e) {
+            result = "재작성 요망";
+        }
+
+        return result;
+    }
+
+    ArrayList<String> changeInFixToPostFix(String[] strArr) {
+        HashMap<String, Integer> pri = new HashMap<>();
+        pri.put("+", 0);
+        pri.put("-", 0);
+        pri.put("*", 1);
+        pri.put("/", 1);
+        pri.put("%", 1);
+
+        Stack<String> stack = new Stack<>();
+        ArrayList<String> reverseStrArr = new ArrayList<>();
+        for(String s : strArr) {
+            if(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%")) {
+                if(stack.isEmpty())
+                    stack.push(s);
+                else { 
+                    System.out.println("Test: " + pri.get(stack.peek()) + " " + stack.peek());
+                    if(pri.get(stack.peek()) < pri.get(s)) 
+                        stack.push(s);
+                    else {
+                        while(true) {
+                            if(stack.isEmpty() || pri.get(stack.peek()) < pri.get(s)) {
+                                stack.push(s);
+                                break;
+                            }
+                            reverseStrArr.add(stack.pop());
+                        }
+                    }
+                }
+            } else {
+                reverseStrArr.add(s);
+            }
+
+        }
+        while(!stack.isEmpty()) {
+            reverseStrArr.add(stack.pop());
+        }
+
+        return reverseStrArr;
+    }
+
+    public String calculatePostFix(ArrayList<String> postFix) {
+        Stack<String> stack = new Stack<>();
+        String result;
+        for(String s : postFix) {
                 System.out.println(s);
                 if(!(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%")))
                     stack.add(s);
@@ -160,10 +181,7 @@ public class MyFrame extends JFrame {
                     }
                 }
             }
-            result = stack.pop();
-        } catch(Exception e) {
-            result = "재작성 요망";
-        }
+        result = stack.pop();
 
         return result;
     }
@@ -175,8 +193,4 @@ public class MyFrame extends JFrame {
         gbc.gridheight = h;
         add(obj, gbc);
     }
-
-    public static void main(String[] args) {
-        new MyFrame();
-    }    
 }
