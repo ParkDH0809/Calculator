@@ -106,7 +106,7 @@ public class MyFrame extends JFrame {
             result = calculatePostFix(postFix);
             
         } catch(Exception e) {
-            result = "재작성 요망";
+            return "재작성 요망";
         }
 
         return result;
@@ -154,36 +154,39 @@ public class MyFrame extends JFrame {
 
     public String calculatePostFix(ArrayList<String> postFix) {
         Stack<String> stack = new Stack<>();
-        String result;
         for(String s : postFix) {
-                System.out.println(s);
-                if(!(s.equals("+") || s.equals("-") || s.equals("*") || s.equals("/") || s.equals("%")))
-                    stack.add(s);
-                else {
-                    BigDecimal num2 = new BigDecimal(stack.pop());
-                    BigDecimal num1 = new BigDecimal(stack.pop());
-                    switch(s) {
-                        case "+":
-                            stack.push(num1.add(num2).toString());
-                            break;
-                        case "-":
-                            stack.push(num1.subtract(num2).toString());
-                            break;
-                        case "*":
-                            stack.push(num1.multiply(num2).toString());
-                            break;
-                        case "/":
-                            stack.push(num1.divide(num2, 4, RoundingMode.HALF_UP).toString());
-                            break;
-                        default:
-                            stack.push(num1.remainder(num2).toString());
-                            break;
-                    }
-                }
+            if(!(s.equals("+") 
+            || s.equals("-") 
+            || s.equals("*") 
+            || s.equals("/") 
+            || s.equals("%"))) {
+                stack.add(s);
+                continue;
             }
-        result = stack.pop();
+            
+            stack.add(calculateEquation(s, stack.pop(), stack.pop()));
+            
+        }
+        return stack.pop();
+    }
 
-        return result;
+    public String calculateEquation(String symbol, String stackNum1, String stackNum2) {
+        BigDecimal num2 = new BigDecimal(stackNum1);
+        BigDecimal num1 = new BigDecimal(stackNum2);
+        
+        if(symbol.equals("+"))
+            return (num1.add(num2).toString());
+
+        if(symbol.equals("-"))
+            return (num1.subtract(num2).toString());
+
+        if(symbol.equals("*"))
+            return (num1.multiply(num2).toString());
+
+        if(symbol.equals("/"))
+            return (num1.divide(num2, 4, RoundingMode.HALF_UP).toString());
+
+        return (num1.remainder(num2).toString());
     }
 
     void setPanelLayout(Component obj, int x, int y, int w, int h) {
