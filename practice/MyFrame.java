@@ -85,11 +85,10 @@ public class MyFrame extends JFrame {
             return;
         }
         if(0 <= i && i <= 3 || i % 4 == 3) {
-            btn.setBackground(new Color(150,206,180));
+            setGreen(btn);
             return;
         }
-            
-        btn.setBackground(new Color(255,238,173));
+        setYellow(btn);
     }
 
     void setRed(JButton btn) {
@@ -98,6 +97,14 @@ public class MyFrame extends JFrame {
 
     void setOrange(JButton btn) {
         btn.setBackground(new Color(255,204,92));
+    }
+
+    void setYellow(JButton btn) {
+        btn.setBackground(new Color(255,238,173));
+    }
+
+    void setGreen(JButton btn) {
+        btn.setBackground(new Color(150,206,180));
     }
 
     void initTextField() {
@@ -128,17 +135,29 @@ public class MyFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             String op = e.getActionCommand();
+            setActionEvent(e, op);
+
+        }
+
+        void setActionEvent(ActionEvent e, String op) {
             if(op.equals("AC")) {
                 tf.setText("");
-            } else if(op.equals("DEL")) {
+                return;
+            }
+            
+            if(op.equals("DEL")) {
                 String str = tf.getText();
                 if(!str.isEmpty()) 
                     tf.setText(str.substring(0, str.length() - 1));
-            } else if(op.equals("=")) {
-                tf.setText(Calculator.getResult(tf.getText()));
-            } else {
-                tf.setText(tf.getText() + e.getActionCommand());
+                return;
             }
+            
+            if(op.equals("=")) {
+                tf.setText(Calculator.getResult(tf.getText()));
+                return;
+            }
+
+            tf.setText(tf.getText() + e.getActionCommand());
         }
     }
 }
