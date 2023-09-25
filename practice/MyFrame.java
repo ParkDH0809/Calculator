@@ -36,15 +36,27 @@ public class MyFrame extends JFrame {
 
     void setPanel() {
         //상단 TextField 추가
-        panel1 = new JPanel(new GridLayout(1, 0));
-        tf = new JTextField(30);
-        tf.setEditable(false);               //TextField 사용 방지 (setEnabled()와 다름)
-        tf.setFont(new Font("Sans-serif", Font.BOLD, 50));
+        initPanel1();
+        initTextField();
         panel1.add(tf);
         
         //하단 버튼 추가
-        panel2 = new JPanel(new GridLayout(5, 4, 10, 10));
+        initPanel2();
+        setPanel2Button();
         
+        //레이아웃 지정
+        setLayout();
+    }
+
+    void initPanel1() {
+        panel1 = new JPanel(new GridLayout(1, 0));
+    }
+
+    void initPanel2() {
+        panel2 = new JPanel(new GridLayout(5, 4, 10, 10));    
+    }
+
+    void setPanel2Button() {
         for(int i = 0; i < buttonStr.length; i++) {
             buttonList[i] = new JButton(buttonStr[i]);
             buttonList[i].addActionListener(new BtnActionListener());
@@ -64,9 +76,12 @@ public class MyFrame extends JFrame {
 
             panel2.add(buttonList[i]);
         }
+    }
 
-        //레이아웃 지정
-        setLayout();
+    void initTextField() {
+        tf = new JTextField(30);
+        tf.setEditable(false);               //TextField 사용 방지 (setEnabled()와 다름)
+        tf.setFont(new Font("Sans-serif", Font.BOLD, 50));
     }
 
     void setLayout() {
