@@ -11,8 +11,7 @@ public class MyFrame extends JFrame {
 
     JPanel panel1, panel2;
     JTextField tf;
-    String buttonStr[] = {" % ", " / ", "DEL", "AC", "7", "8", "9", " * ", "4", "5", "6", " - ", "1", "2", "3", " + ", "", "0", ".", "="};
-    JButton buttonList[] = new JButton[buttonStr.length];
+
 
     public void run() {
         setWindow();
@@ -57,25 +56,44 @@ public class MyFrame extends JFrame {
     }
 
     void setPanel2Button() {
+        String[] buttonStr = {
+            " % ", " / ", "DEL", "AC", 
+            "7", "8", "9", " * ", 
+            "4", "5", "6", " - ", 
+            "1", "2", "3", " + ", 
+            "", "0", ".", "="
+        };
+        JButton[] buttonList = new JButton[buttonStr.length];
+
         for(int i = 0; i < buttonStr.length; i++) {
             buttonList[i] = new JButton(buttonStr[i]);
-            buttonList[i].addActionListener(new BtnActionListener());
-            buttonList[i].setFont(new Font("Sans-serif", Font.PLAIN, 15));
-
-            if(i == 2 || i == 3) {
-                buttonList[i].setBackground(new Color(255,111,105));
-            }
-            else if(i == 19) {
-                buttonList[i].setBackground(new Color(255,204,92));
-            }
-            else if(0 <= i && i <= 3 || i % 4 == 3) {
-                buttonList[i].setBackground(new Color(150,206,180));
-            }
-            else 
-                buttonList[i].setBackground(new Color(255,238,173));
-
+            
+            setButton(buttonList[i], i, buttonStr);
+            setButtonColor(buttonList[i], i);
             panel2.add(buttonList[i]);
         }
+    }
+
+    void setButton(JButton btn, int i, String[] buttonStr) {
+        btn.addActionListener(new BtnActionListener());
+        btn.setFont(new Font("Sans-serif", Font.PLAIN, 15));
+    }
+
+    void setButtonColor(JButton btn, int i) {
+        if(i == 2 || i == 3) {
+            btn.setBackground(new Color(255,111,105));
+            return;
+        }
+        if(i == 19) {
+            btn.setBackground(new Color(255,204,92));
+            return;
+        }
+        if(0 <= i && i <= 3 || i % 4 == 3) {
+            btn.setBackground(new Color(150,206,180));
+            return;
+        }
+            
+        btn.setBackground(new Color(255,238,173));
     }
 
     void initTextField() {
