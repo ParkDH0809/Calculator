@@ -35,23 +35,19 @@ public class MyFrame extends JFrame {
 
     void setPanel() {
         //상단 TextField 추가
-        initPanel1();
+        initPanel();
         initTextField();
         panel1.add(tf);
         
         //하단 버튼 추가
-        initPanel2();
         setPanel2Button();
         
         //레이아웃 지정
         setLayout();
     }
 
-    void initPanel1() {
+    void initPanel() {
         panel1 = new JPanel(new GridLayout(1, 0));
-    }
-
-    void initPanel2() {
         panel2 = new JPanel(new GridLayout(5, 4, 10, 10));    
     }
 
@@ -67,7 +63,7 @@ public class MyFrame extends JFrame {
 
         for(int i = 0; i < buttonStr.length; i++) {
             buttonList[i] = new JButton(buttonStr[i]);
-            
+
             setButton(buttonList[i], i, buttonStr);
             setButtonColor(buttonList[i], i);
             panel2.add(buttonList[i]);
