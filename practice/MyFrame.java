@@ -77,11 +77,11 @@ public class MyFrame extends JFrame {
 
     void setButtonColor(JButton btn, int i) {
         if(i == 2 || i == 3) {
-            btn.setBackground(new Color(255,111,105));
+            setRed(btn);
             return;
         }
         if(i == 19) {
-            btn.setBackground(new Color(255,204,92));
+            setOrange(btn);
             return;
         }
         if(0 <= i && i <= 3 || i % 4 == 3) {
@@ -90,6 +90,14 @@ public class MyFrame extends JFrame {
         }
             
         btn.setBackground(new Color(255,238,173));
+    }
+
+    void setRed(JButton btn) {
+        btn.setBackground(new Color(255,111,105));
+    }
+
+    void setOrange(JButton btn) {
+        btn.setBackground(new Color(255,204,92));
     }
 
     void initTextField() {
