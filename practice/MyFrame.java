@@ -15,18 +15,23 @@ public class MyFrame extends JFrame {
     JButton buttonList[] = new JButton[buttonStr.length];
 
     public void run() {
-        setSize(400, 600);              //창 크기 설정
-        setTitle("Java Calculator");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);     //X버튼 클릭 시 종료 방법 설정
-        setLocationRelativeTo(null);               //창 표시 위치 설정
-
-        setLayout(new GridBagLayout());
-
-        gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-
+        setWindow();
+        setGrigBagConstraints();
         setPanel();
         setVisible(true);                          //창 표시 유무 설정
+    }
+
+    void setWindow() {
+        setSize(400, 600);             //창 크기 설정
+        setTitle("Java Calculator");          //창 이름 설정
+        setDefaultCloseOperation(EXIT_ON_CLOSE);    //X버튼 클릭 시 종료 방법 설정
+        setLocationRelativeTo(null);              //창 표시 위치 설정
+        setLayout(new GridBagLayout());             //레이아웃 설정
+    }
+
+    void setGrigBagConstraints() {
+        gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
     }
 
     void setPanel() {
@@ -61,6 +66,10 @@ public class MyFrame extends JFrame {
         }
 
         //레이아웃 지정
+        setLayout();
+    }
+
+    void setLayout() {
         gbc.weightx=0.5;
         gbc.weighty=0.5;
         setPanelLayout(panel1, 0, 0, 1, 1);
@@ -68,7 +77,6 @@ public class MyFrame extends JFrame {
         gbc.weightx=1.0;
         gbc.weighty=1.0;
         setPanelLayout(panel2, 0, 1, 1, 1);
-
     }
 
     void setPanelLayout(Component obj, int x, int y, int w, int h) {
