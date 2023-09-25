@@ -13,11 +13,7 @@ import java.util.*;
 class Calculator {
     private final static HashMap<String, Integer> symbolPriority = new HashMap<>();
 
-    Calculator() {
-        initSymbolHashMap();
-    }
-
-    private void initSymbolHashMap() {
+    static {
         symbolPriority.put("+", 0);
         symbolPriority.put("-", 0);
         symbolPriority.put("*", 1);
